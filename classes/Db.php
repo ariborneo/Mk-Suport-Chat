@@ -62,5 +62,34 @@
    public function getError(){
        return $this->conexion->errorInfo();
    }
+   
+   /**
+    * Method to return the last insert id
+    * @return mixed The last insert Id
+    */ 
+   public function getLastId(){
+       return $this->conexion->lastInsertId();
+   }
 }
  
+/**
+ * Exception class for the database
+ */
+class DbException extends Exception{
+    public function __construct($message,$stmt=null ,$code = 0, Exception $previous = null){
+        
+        if($stmt!=null)
+            $error=$stmt->errorInfo();
+        else{
+            $database=Db::getInstance();
+            $error=$database->getError(); 
+        }
+           
+        $message.=" ".$error[2];
+        parent::__construct($message, $code, $previous);
+    }
+    
+    public function __toString() {
+        return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
+    }
+}
