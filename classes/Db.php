@@ -70,6 +70,14 @@
    public function getLastId(){
        return $this->conexion->lastInsertId();
    }
+   
+   
+   public function getTimestamp(){
+       $query ="SELECT NOW() as TIME;";
+       $stmt=Db::getInstance()->prepare($query);
+       $stmt->execute();
+       return $stmt->fetchColumn(0);
+   }
 }
  
 /**

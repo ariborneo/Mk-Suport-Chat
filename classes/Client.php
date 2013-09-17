@@ -151,6 +151,8 @@ class Client{
        if(Message::sendMessage($chat_id, $type, $message)){
            $this->setLastActivity();
            return true;
+       }else{
+           return false;
        }
    }
    

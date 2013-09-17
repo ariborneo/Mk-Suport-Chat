@@ -119,7 +119,10 @@ class Chat{
        }
     }
     
-    
+   /**
+    * Get's an  array whit the unassigned chats
+    * @return Array
+    */ 
     public static function getUnasignedChats(){
         $dbconection= Db::getInstance();
         $query="SELECT * FROM chat WHERE status=0";
@@ -157,9 +160,15 @@ class Chat{
         }
     }
     
+    /**
+     * Gets the id of the assigned user
+     * @return int The id of the assigned user
+     */
     public function getUser(){
         return $this->user_id;
     }
+    
+   
     
 }
 

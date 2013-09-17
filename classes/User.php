@@ -125,7 +125,49 @@ class User{
         }
     }
     
+    /**
+     * Sends a clien message
+     * @param string @message the message content
+     * @param int @chat_id  the tarcget chat id
+     * @return boolean
+     */
+    public function sendMessage($message,$chat_id){
+       $type=2;
+       if($this->hasChat($chat_id)){
+           if(Message::sendMessage($chat_id, $type, $message)){
+               return true;
+           }else{
+               return false;
+           }
+       }else{
+           return false;
+       }
+    }
     
+    /**
+     * Verifies that a user owns a chat
+     * @param int $id The chat id
+     * @return boolean  
+     * @throws DbException
+     */
+    public function hasChat($id){
+        $query="SELECT id FROM chat WHERE id=? and user_id=$this->id";
+        $db=Db::getInstance();
+        if($stmt=$db->prepare($query)){
+            $stmt->bindParam(1,$id,PDO::PARAM_INT);
+            if($stmt->execute()){
+                if($stmt->fetch())
+                    return true;
+                else {
+                    return false;
+                }
+            }else{
+                throw new DbException("Error:",$stmt);
+            }
+        }else{
+            throw new DbException("Error:");
+        }
+    }
 }
 
 /**

@@ -51,6 +51,20 @@ switch($option){
             echo "Error";
         }
         break;
+    case "user-msg":
+        $user= User::getUser($argv[2]);
+        if($user->sendMessage($argv[3],$argv[4]))
+            echo $argv[3];
+        else {
+            echo "Error";
+        }
+        break;
+    case "time":
+        echo Db::getInstance()->getTimestamp();
+        break;
+    case "get-latest":
+        echo print_r(Message::getLatestMessages($argv[2],$argv[3]));
+        break;
     
     default:
         echo "unexisting function";

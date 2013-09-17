@@ -1,0 +1,8 @@
+#main{
+	margin-top: 100px;
+}
+
+#messages{
+	height: 300px;
+	overflow-y: scroll;
+}
