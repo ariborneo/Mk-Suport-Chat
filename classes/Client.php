@@ -130,6 +130,7 @@ class Client{
            if($stmt->execute()){
                if($row =$stmt->fetch(PDO::FETCH_ASSOC)){
                    $this->chat=Chat::getExistingChat($row['id']);
+                   //
                    return $this->chat;
                }
                     
@@ -141,6 +142,7 @@ class Client{
        }
        
        $this->chat=Chat::getNewChat($this->id);
+       Message::sendMessage($this->chat->id, 3, "Welcome wait until someone takes your chat");
        return $this->chat;
    }
    

@@ -73,7 +73,7 @@ class Message{
             $stmt->bindParam(1,$date,PDO::PARAM_STR);
             $stmt->bindParam(2,$chat,PDO::PARAM_INT);
             if($stmt->execute()){
-                return $stmt->fetchAll(PDO::FETCH_OBJ);
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
             }{
                 throw new DbException("Can't get messages:",$stmt);
             }

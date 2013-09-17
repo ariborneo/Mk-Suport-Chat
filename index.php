@@ -3,21 +3,20 @@ session_start();
 require_once 'classes/Client.php';
 $id=null;
 
-if((isset( $_POST['name']) &&  $_POST['name']!="" ) && (isset($_POST['email']) &&  $_POST['email']!="" )){
+
+if(isset($_SESSION['client_id'])){
+    $client=Client::getClient($_SESSION['client_id']);
+    $id=$_SESSION['client_id'];
+    $chat_id=$_SESSION['chat_id'];
+}
+elseif((isset( $_POST['name']) &&  $_POST['name']!="" ) && (isset($_POST['email']) &&  $_POST['email']!="" )){
     $client= Client::getNewClient($_POST['name'], $_POST['email']);
     $_SESSION['client_id']=$client->id;
     $id=$_SESSION['client_id'];
     $_SESSION['chat_id']=$client->getChat()->id;
 }
-else if(isset($_SESSION['client_id'])){
-    $client=Client::getClient($_SESSION['client_id']);
-    $id=$_SESSION['client_id'];
-    $chat_id=$_SESSION['chat_id'];
-}
 
-if(isset($_POST['message'])&&$_POST['message']!=""){
-    
-}
+$_SESSION['last_update']="0000-00-00 00:00:00";
 
 ?>
 <!DOCTYPE html>
@@ -30,6 +29,7 @@ if(isset($_POST['message'])&&$_POST['message']!=""){
         <script src="bootstrap/js/bootstrap.min.js"></script>
         <script src="js/main.js"></script>
         <title>Simple Support Chat</title>
+        
     </head>
     <body>
         <div class="container">
@@ -62,11 +62,11 @@ if(isset($_POST['message'])&&$_POST['message']!=""){
                 <a href="logout.php" class="btn btn-danger">Leave Chat</a>
                 <br>
                 <br>
-                <div id="messages" class="well">
-                    
+                <div id="messages" class="well ">
+                    <div id="last"></div>
                     
                 </div>
-                <form onsubmit="return validateMessage()" style="text-align: right" role="form" method="post">
+                <form onsubmit="sendMessage(); return false" style="text-align: right" role="form" method="post">
                     <div class="form-group">
                         <label class="sr-only" for="message">Message</label>
                         <input autocomplete="off" type="text" class=" form-control " id="message" placeholder="Enter your message">
@@ -81,5 +81,13 @@ if(isset($_POST['message'])&&$_POST['message']!=""){
             
             
         </div>
+        <br />
+        <?php if(isset($_SESSION['client_id'])){?>
+        <script type="text/javascript">
+            $(function(){
+                window.setInterval(function(){ getMessages('<?php echo $_SESSION['last_update'] ?>') },1000);
+            });
+        </script>
+        <?php } ?>
     </body>
 </html>

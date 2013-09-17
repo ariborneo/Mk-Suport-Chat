@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__."/Db.php";
+require_once __DIR__."/Message.php";
 
 /**
  * This class manages the chats
@@ -128,7 +129,7 @@ class Chat{
         $query="SELECT * FROM chat WHERE status=0";
         if($stmt=$dbconection->prepare($query)){
             if($stmt->execute()){
-                return $stmt->fetchAll();
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
             }else{
                 throw new DbException("Statement error",$stmt);
             }
@@ -149,6 +150,8 @@ class Chat{
             $stmt->bindParam(1,$id,PDO::PARAM_INT);
             $stmt->bindParam(2,$this->id,PDO::PARAM_INT);
             if($stmt->execute()){
+                $user=User::getUser($id);
+                Message::sendMessage($this->id, 3, $user->display_name." Has take your chat");
                 $this->user_id=$id;
                 $this->status=1;
                 return true;
@@ -168,7 +171,32 @@ class Chat{
         return $this->user_id;
     }
     
-   
+    public function finalize(){
+        $db=Db::getInstance();
+        Message::sendMessage($this->id, 3, 'The chat has been ended');
+        $query = "UPDATE chat SET status = 3,end_date=NOW() WHERE id = $this->id";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+    }
+    
+    public function getClientName(){
+        $db=Db::getInstance();
+        $query = "SELECT name FROM client WHERE id = $this->client_id";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        $result= $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['name'];
+    }
+    
+    
+    public function getUserName(){
+        $db=Db::getInstance();
+        $query = "SELECT display_name FROM user WHERE id = $this->user_id";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        $result= $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['display_name'];
+    }
     
 }
 

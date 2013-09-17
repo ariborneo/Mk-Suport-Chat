@@ -2,6 +2,7 @@
 
 require_once __DIR__."/Db.php";
 require_once __DIR__."/Chat.php";
+require_once __DIR__."/Message.php";
 
 /**
  * Clase para el manejo de los Usuarios
@@ -167,6 +168,15 @@ class User{
         }else{
             throw new DbException("Error:");
         }
+    }
+    
+    
+    public function getChats(){
+        $db = Db::getInstance();
+        $query="SELECT * FROM chat WHERE status=1 AND user_id=$this->id";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 
