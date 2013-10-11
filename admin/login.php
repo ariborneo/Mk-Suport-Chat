@@ -42,7 +42,7 @@ if(isset($_POST['username'])){
                     <div class="form-group">
                         <label for="email">Password</label>
                         <input type="password"  class="form-control" id="password" placeholder="Email" name="password" />
-                        <span class="help-block"></span>
+                        <span class="help-block">Try: admin/1234</span>
                     </div>
                     <input type="submit" value="Enter" class="btn btn-primary" />
                 </form>
